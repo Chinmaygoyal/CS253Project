@@ -7,5 +7,5 @@ It is advised to install node using nvm and not directly - [Install node using n
 For initializing the project follow the following steps:
 ```
 npm install
-node index.js
+nodemon app.js
 ```
