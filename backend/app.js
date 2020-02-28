@@ -6,6 +6,7 @@ var logger = require('morgan');
 var app = express();
 var bodyParser = require('body-parser');
 
+var session = require('express-session');
 var sql = require('./database.js');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -23,9 +24,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// app.get('/',function(req,res){
+//   res.cookie('myfirstCookie','010101');
+//   res.end('YOYOYO');
+// });
 app.use('/', indexRouter);
+app.use('/removeCookie',indexRouter);
 app.use('/users', usersRouter);
-
+app.use(session({secret: "chinmayg"}));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -42,7 +48,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-var port = 3000;
+
+var port = 9000;
+
 
 var server = app.listen(port, () => {
   console.log("Working");

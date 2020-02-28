@@ -4,10 +4,23 @@ var connection = require('../database.js');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+// var session = require('express-session');
+var cookieParser = require('cookie-parser');
+let user = {
+  id : "101010",
+  role : "manager"
+}
+var cookieValue = JSON.stringify(user);
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Yo' });
-});
+// router.get('/', function(req, res, next) {
+//   res.cookie('cookietemp',user,{maxAge : 900000});
+//   res.end('YOYOYO');
+  // res.render('index', { title: 'Yo' });
+// });
+// router.get('/removeCookie',function(req,res,next){
+//   res.clearCookie('myFirstCookie');
+//   res.end('WOW');
+// });
 
 //route for login
 router.post('/',function(req,res,next){
