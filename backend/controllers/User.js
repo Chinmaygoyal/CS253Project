@@ -2,6 +2,8 @@ var mysql = require('mysql');
 var uuid = require('uuid');
 var express = require('express');
 var router = express.Router();
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 // var http = require('http');
 var app = express();
 // var bodyParser = require('body-parser');
@@ -35,8 +37,11 @@ router.get('/:id',function(req,res){
 });
 router.post('/insert',function(req,res){
     var sql = "INSERT INTO USERS (ID, NAME, EMAIL, PASSWORD, ROLE) VALUES ?";
+    var password = req.body.password;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hash = bcrypt.hashSync(password,salt);
     var values = [
-        [uuid.v4(),req.body.name,req.body.email,req.body.password,req.body.role]
+        [uuid.v4(),req.body.name,req.body.email,hash,req.body.role]
     ];
     con.query(sql,[values],function(err,result, fields){
         if(err)throw err;

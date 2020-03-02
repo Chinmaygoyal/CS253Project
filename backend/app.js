@@ -30,8 +30,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   res.cookie('myfirstCookie','010101');
 //   res.end('YOYOYO');
 // });
-app.use('/', indexRouter);
-app.use('/removeCookie',indexRouter);
+
+// The below two lines are for cookie dealings, to be
+// uncommented later
+// app.use('/', indexRouter);
+// app.use('/removeCookie',indexRouter);
+
+
 app.use('/users', usersRouter);
 app.use('/user',userRouter);
 app.use(session({secret: "chinmayg"}));
