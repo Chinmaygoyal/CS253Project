@@ -12,11 +12,11 @@ let user = {
 }
 var cookieValue = JSON.stringify(user);
 /* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.cookie('cookietemp',user,{maxAge : 900000});
-//   res.end('YOYOYO');
-  // res.render('index', { title: 'Yo' });
-// });
+router.get('/', function(req, res, next) {
+  res.cookie('cookietemp',user,{maxAge : 900000});
+  res.end('YOYOYO');
+  res.render('index', { title: 'Yo' });
+});
 // router.get('/removeCookie',function(req,res,next){
 //   res.clearCookie('myFirstCookie');
 //   res.end('WOW');
