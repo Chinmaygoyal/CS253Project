@@ -1,0 +1,10 @@
+drop table if exists USERS;
+CREATE TABLE USERS (
+     ID VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY,
+     NAME VARCHAR(255),
+     EMAIL VARCHAR(255),
+     PASSWORD TEXT,
+     ROLE VARCHAR(255)
+     );
+
+insert into USERS value (uuid(),"FullStack Aaryan","aaryans@iitk.ac.in","aaryan","manager");
