@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // The below two lines are for cookie dealings, to be
 // uncommented later
-// app.use('/', indexRouter);
+app.use('/', indexRouter);
 // app.use('/removeCookie',indexRouter);
 
 
