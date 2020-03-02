@@ -23,17 +23,26 @@ router.get('/', function(req, res, next) {
 // });
 
 //route for login
-router.post('/',function(req,res,next){
+router.post('/',async function(req,res,next){
   var password = req.body.password;
   var email = req.body.email;
 
   const salt = bcrypt.genSaltSync(saltRounds);
   const hash = bcrypt.hashSync(password, salt);
-
-  connection.query("SELECT * FROM USERS where EMAIL=? AND PASSWORD=?",[email,hash], async function (err, result, fields) {
-    if (err) throw err;
-    if( result == '') console.log("Unauthorized access");
-    else console.log("Success");
+  var role;
+    connection.query("SELECT * FROM USERS where EMAIL=? AND PASSWORD=?", [email, password], async function (err, result, fields) {
+    if (err)
+      throw err;
+    if (result.length == 0){
+      console.log("Unauthorized access");
+    }
+    else if (result.length == 1){
+      console.log("Success");
+      role = await result[0].ROLE;
+      res.send(role);
+    }
+    else
+      console.log("More than one entry on login, database error");
   });
   res.send("Yo");
 });
