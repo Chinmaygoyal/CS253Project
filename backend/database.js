@@ -1,15 +1,16 @@
-var mysql = require('mysql');
+const { Sequelize, Model, DataTypes } = require("sequelize");
+const UserModel = require('./models/user.js');
 
-var connection = mysql.createConnection({
+const sequelize = new Sequelize('first', 'newuser', 'password', {
   host: 'localhost',
-  user: 'newuser',
-  password: 'password',
-  database: 'first'
+  logging: false,
+  dialect: 'mysql'
 });
 
-connection.connect(function(err) {
-    if(err) console.log("Database connection failed, the error is : " + err);
-    else console.log("MySQL is running. ")
-});
 
-module.exports = connection;
+sequelize.sync({ force: false })
+  .then(() => {
+    console.log(`Database & tables created!`)
+  })
+
+module.exports = sequelize;

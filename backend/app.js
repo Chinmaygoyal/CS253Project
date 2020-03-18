@@ -5,9 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var app = express();
 var bodyParser = require('body-parser');
-
+const { Sequelize, Model, DataTypes } = require("sequelize");
 var session = require('express-session');
-var sql = require('./database.js');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -33,10 +32,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // The below two lines are for cookie dealings, to be
 // uncommented later
-app.use('/', indexRouter);
 // app.use('/removeCookie',indexRouter);
 
 
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/user',userRouter);
 app.use(session({secret: "chinmayg"}));
@@ -56,8 +55,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
-var port = 9000;
+//only for development
+var port = 5000;
+console.log("PORT:" + port)
 
 
 var server = app.listen(port, () => {
