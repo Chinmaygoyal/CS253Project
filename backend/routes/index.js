@@ -2,10 +2,9 @@ var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-
 const User = require('../models/user.js');
-
 var cookieParser = require('cookie-parser');
+
 let user = {
   id : "101010",
   role : "manager"
@@ -32,45 +31,46 @@ router.get('/api/users', async (req, res) => {
 //only for development
 router.post('/api/users', async (req, res) => {
   var body = req.body;
-  console.log(body);
-  var user = await User.create({
-    email: body.email,
-    password: body.password
+  var password = body.password;
+  var user;
+  bcrypt.genSalt(saltRounds, function(err, salt) {
+    bcrypt.hash(password, salt, async function(err, hash) {
+        // Store hash in your password DB.
+        user = await User.create({
+          email: body.email,
+          password: hash
+        });
+        console.log(body);
+        console.log(user instanceof User);
+        console.log("hello");
+        res.send(user.toJSON());
+    });
   });
-  console.log(user);
-  console.log(user instanceof User);
-  console.log("hello");
-  res.send(user.toJSON());
 })
 
 //route for login
-// router.post('/',async function(req,res,next){
-//   var password = req.body.password;
-//   var email = req.body.email;
-
-//   var role;
-
-//   connection.query("SELECT * FROM USERS where EMAIL=?", [email], function (err, result, fields) {
-//     if (err)
-//       throw err;
-//     if (result.length == 0){
-//       console.log(hash);
-//       console.log("Unauthorized access");
-//     }
-//     else if (result.length == 1){
-//       console.log(result);
-//       if(bcrypt.compare(password, result[0].PASSWORD)){
-//         console.log("Success");
-//         role = result[0].ROLE;
-//         res.send(role);
-//       }else{
-//         console.log("Wrong Password");
-//       }
-//     }
-//     else
-//       console.log("More than one entry on login, database error");
-//   });
-//   res.send("Yo");
-// });
+router.post('/',async function(req,res,next){
+  var password = req.body.password;
+  var email = req.body.email;
+  var role;
+  var user = await User.findAll({
+    where: {
+      email: email
+    }
+  });
+  if(Object.keys(user).length == 0){
+    res.send("Invalid access");
+  }else if(Object.keys(user).length == 1){
+    bcrypt.compare(password, user[0].password, function(err, result) {
+      if(result){
+          res.send("Successful Login");
+        }else{
+          res.send("Wrong credentials");
+        }
+    });
+  }else{
+    res.send("More than one entry on login, database error");
+  }
+});
 
 module.exports = router;
