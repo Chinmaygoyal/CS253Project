@@ -16,7 +16,10 @@ const User = sequelize.define('user', {
             type: sequelize.Sequelize.STRING,
             allowNull: false
         },
-        role: sequelize.Sequelize.STRING
+        role: {
+            type: sequelize.Sequelize.STRING,
+            allowNull: false
+        }
     })
 
 module.exports = User;

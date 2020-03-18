@@ -32,17 +32,16 @@ router.get('/api/users', async (req, res) => {
 router.post('/api/users', async (req, res) => {
   var body = req.body;
   var password = body.password;
-  var user;
   bcrypt.genSalt(saltRounds, function(err, salt) {
     bcrypt.hash(password, salt, async function(err, hash) {
-        // Store hash in your password DB.
-        user = await User.create({
-          email: body.email,
-          password: hash
-        });
+      // Store hash in your password DB.
+      var user = await User.create({
+        email: body.email,
+        password: hash,        
+        role: body.role
+      });
         console.log(body);
         console.log(user instanceof User);
-        console.log("hello");
         res.send(user.toJSON());
     });
   });
@@ -72,5 +71,81 @@ router.post('/',async function(req,res,next){
     res.send("More than one entry on login, database error");
   }
 });
+
+//list all the TAs
+router.get('/listTA', async (req, res) => {
+  var users = await User.findAll({
+    where: {
+      role: "ta"
+    }
+  });
+  res.json(users);
+});
+
+//create a TA
+router.post('/createTA', async (req, res) => {
+  //check user here whether the person is manager or not
+  //assuming rught now that the person is a manager
+  
+  var body = req.body;
+  var password = body.password;
+  var email = body.email;
+  var role = "ta";
+  bcrypt.genSalt(saltRounds, function(err, salt) {
+    bcrypt.hash(password, salt, async function(err, hash) {
+      // Store hash in your password DB.
+      var user = await User.create({
+        email: body.email,
+        password: hash,        
+        role: role
+      });
+        console.log(body);
+        console.log(user instanceof User);
+        res.send(user.toJSON());
+    });
+  });
+
+});
+
+
+router.post('/changepwd', async (req, res) => {
+
+  //check user here whether the person is authorized to do the stuff
+  //assuming rught now that the person is a manager
+  
+  //get the email from cookies through using the ID of the person
+  var email = "trial@a.com";
+
+  var oldPassword = req.body.oldPassword;
+  var newPassword = req.body.newPassword;
+
+  var users = await User.findAll({
+    where: {
+      email: email
+    }
+  });
+  if(Object.keys(user).length == 0){
+    console.log("System Error");
+  }else if(Object.keys(user).length == 1){
+    bcrypt.compare(oldPassword, user[0].password, function(err, result) {
+      if(result){
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+          bcrypt.hash(newPassword, salt, async function(err, hash) {
+            // Store hash in your password DB.
+            var user = await User.update({password: hash},{
+              where: {
+                email: email
+              }
+            });
+          });
+        });
+        res.send("Password changed successful Login");
+      }else{
+        res.send("Wrong password");
+      }
+    });
+  }
+  res.json(users);
+})
 
 module.exports = router;
