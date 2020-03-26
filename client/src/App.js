@@ -1,24 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import HomePage from './components/homepage/homepage';
+import {makeStyles} from '@material-ui/core/styles';
+import TopBar from './components/topBar/topBar';
+
+const useStyles = makeStyles(theme => ({
+  fab: {
+    position: 'relative',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+    color: 'primary',
+  }
+}));
 
 function App() {
+
+  const classes = makeStyles(); 
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <TopBar/>
+      <HomePage/>
     </div>
   );
 }
